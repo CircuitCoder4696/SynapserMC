@@ -1,4 +1,4 @@
 # Project exclude paths
 /target/
 icon.png
-.idea
+.idea/
