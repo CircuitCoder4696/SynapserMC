@@ -5,6 +5,7 @@ import me.neo.synapser.types.VarInt;
 import me.neo.synapser.utils.SLogger;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class InboundPacketDecoder {
     private byte[] data;
@@ -68,5 +69,17 @@ public class InboundPacketDecoder {
         byte[] longBytes = Arrays.copyOf(data, Long.BYTES);
         discard(Long.BYTES);
         return Longs.bytesToLong(longBytes);
+    }
+
+    public UUID getUUID() {
+        UUID uuid = new UUID(getLong(), getLong());
+        return uuid;
+    }
+
+    public byte[] getBytes(int amount) {
+        byte[] bytes = new byte[amount];
+        System.arraycopy(data, 0, bytes, 0, amount);
+        discard(amount);
+        return bytes;
     }
 }

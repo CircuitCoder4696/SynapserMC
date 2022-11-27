@@ -46,4 +46,8 @@ public class SLogger implements System.Logger {
     public void debug(String format, Object... params) {
         log(Level.DEBUG, null, format, params);
     }
+
+    public void error(String format, Object... params) {
+        log(Level.ERROR, null, format, params);
+    }
 }

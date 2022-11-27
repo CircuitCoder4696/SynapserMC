@@ -60,7 +60,8 @@ public class ServerConfig {
         SERVER_IP("server.ip", ""),
         SERVER_MOTD("server.motd", "A Synapser Minecraft Server"),
         SERVER_MAX_PLAYERS("server.max_players", 20),
-        SERVER_PREVIEWS_CHAT("server.previews_chat", false);
+        SERVER_PREVIEWS_CHAT("server.previews_chat", false),
+        SERVER_ONLINE("server.online", true);
         private final String path;
         private final Object def;
         private final Validator validator;

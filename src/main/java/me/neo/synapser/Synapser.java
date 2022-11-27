@@ -1,14 +1,19 @@
 package me.neo.synapser;
 
 import me.neo.synapser.exceptions.EulaAgreementException;
-import me.neo.synapser.minecraft.Player;
+import me.neo.synapser.minecraft.entity.Player;
 import me.neo.synapser.minecraft.chat.ChatParser;
 import me.neo.synapser.minecraft.chat.ITextComponent;
 import me.neo.synapser.net.GameServer;
 import me.neo.synapser.utils.SLogger;
 import me.neo.synapser.utils.config.ServerConfig;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
+import java.security.*;
 import java.util.*;
 
 public class Synapser {
@@ -16,6 +21,10 @@ public class Synapser {
     private static ServerConfig config;
     private static Set<Player> onlinePlayers = new HashSet<>();
     private static String favicon = "";
+    private static KeyPair keyPair;
+    private static Cipher encrypter;
+    private static Cipher decrypter;
+
 
     public static GameServer getServer() {
         return server;
@@ -51,6 +60,34 @@ public class Synapser {
 
     public static boolean getEulaAgreement() {
         return config.getBoolean(ServerConfig.Key.EULA_AGREEMENT);
+    }
+    public static KeyPair getKeyPair() { return keyPair; }
+    public static boolean getOnlineMode() { return config.getBoolean(ServerConfig.Key.SERVER_ONLINE); }
+    public static byte[] decryptWithPrivate(byte[] data) {
+        try {
+            return decrypter.doFinal(data);
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static byte[] encryptWithPrivate(byte[] data) {
+        try {
+            return encrypter.doFinal(data);
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void newKeyPair() {
+        try {
+            keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+            encrypter = Cipher.getInstance("RSA");
+            decrypter = Cipher.getInstance("RSA");
+            encrypter.init(Cipher.ENCRYPT_MODE, getKeyPair().getPrivate());
+            decrypter.init(Cipher.DECRYPT_MODE, getKeyPair().getPrivate());
+
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) throws IOException, EulaAgreementException {

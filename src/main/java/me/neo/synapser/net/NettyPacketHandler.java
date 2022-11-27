@@ -40,6 +40,8 @@ public class NettyPacketHandler extends ChannelHandlerAdapter {
                     data[i] = bytes.get(i);
                 }
 
+                if (session.getEncrypted()) data = session.decryptData(data);
+
                 InboundPacketDecoder decoder = new InboundPacketDecoder(data);
                 logger.debug("Packet ID: %d, Packet Length: %d", decoder.getPacketId(), decoder.getLength());
                 logger.debug("Inbound Data: %s", ByteArray.arrayToString(data));
@@ -59,6 +61,6 @@ public class NettyPacketHandler extends ChannelHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-
+        cause.printStackTrace();
     }
 }

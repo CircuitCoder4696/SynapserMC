@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.neo.synapser.Synapser;
 import me.neo.synapser.minecraft.chat.TextComponentBase;
+import me.neo.synapser.minecraft.entity.Player;
 
 public class ServerInfo {
     public static String Version = "1.19";

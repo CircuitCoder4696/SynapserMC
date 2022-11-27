@@ -10,6 +10,10 @@ import me.neo.synapser.exceptions.EulaAgreementException;
 import me.neo.synapser.net.handler.HandlerRegistry;
 import me.neo.synapser.net.handler.PacketRegistry;
 import me.neo.synapser.net.handler.handshake.HandshakePacket;
+import me.neo.synapser.net.handler.login.EncryptionRequestPacket;
+import me.neo.synapser.net.handler.login.EncryptionResponsePacket;
+import me.neo.synapser.net.handler.login.LoginStartPacket;
+import me.neo.synapser.net.handler.login.LoginSuccessPacket;
 import me.neo.synapser.net.handler.status.StatusPingPacket;
 import me.neo.synapser.net.handler.status.StatusPongPacket;
 import me.neo.synapser.net.handler.status.StatusRequestPacket;
@@ -69,8 +73,14 @@ public class GameServer {
         HandlerRegistry.register(new HandshakePacket());
         HandlerRegistry.register(new StatusRequestPacket());
         HandlerRegistry.register(new StatusPingPacket());
+        HandlerRegistry.register(new LoginStartPacket());
+        HandlerRegistry.register(new EncryptionResponsePacket());
 
         PacketRegistry.register(new StatusResponsePacket());
         PacketRegistry.register(new StatusPongPacket());
+        PacketRegistry.register(new EncryptionRequestPacket());
+        PacketRegistry.register(new LoginSuccessPacket());
+
+        Synapser.newKeyPair();
     }
 }

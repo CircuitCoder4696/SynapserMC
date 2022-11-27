@@ -3,7 +3,11 @@ package me.neo.synapser.net;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
+import me.neo.synapser.minecraft.Property;
+import me.neo.synapser.minecraft.chat.TextComponentBase;
 import me.neo.synapser.types.Longs;
 import me.neo.synapser.types.VarInt;
 import me.neo.synapser.utils.SLogger;
@@ -19,7 +23,7 @@ public class OutboundPacketBuilder {
     public int getPacketId() {
         return packetId;
     }
-    private void addBytes(byte[] bytes) {
+    public void addBytes(byte[] bytes) {
         for (byte b : bytes) {
             addByte(b);
         }
@@ -48,6 +52,31 @@ public class OutboundPacketBuilder {
 
     public OutboundPacketBuilder addLong(long value) {
         addBytes(Longs.longToBytes(value));
+        return this;
+    }
+
+    public OutboundPacketBuilder addTextComponent(TextComponentBase base) {
+        addString(base.serialize().toString());
+        return this;
+    }
+
+    public OutboundPacketBuilder addPropertySet(Set<Property> properties) {
+        addVarInt(properties.size());
+        for (Property p : properties) {
+            SLogger.getGlobal().debug("Name: %s\nValue: %s\nSignature: %s", p.name(), p.value(), p.signature());
+            addString(p.name());
+            addString(p.value());
+            addBoolean(p.signature() != null);
+            if (p.signature() != null) {
+                addString(p.signature());
+            }
+        }
+        return this;
+    }
+
+    public OutboundPacketBuilder addUUID(UUID uuid) {
+        addLong(uuid.getMostSignificantBits());
+        addLong(uuid.getLeastSignificantBits());
         return this;
     }
 
