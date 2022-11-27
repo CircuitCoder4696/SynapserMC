@@ -8,7 +8,7 @@ The goal is to be as compatible as possible with original minecraft clients.
 Synapser currently doesn't support any versions as it is not complete.
 
 #### What is Synapser written in
-Synapser is written in Kotlin
+Synapser is written in Java
 <br><br>
 
 ## License
