@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import me.neo.synapser.Synapser;
 import me.neo.synapser.exceptions.EulaAgreementException;
+import me.neo.synapser.minecraft.nbt.*;
 import me.neo.synapser.net.handler.HandlerRegistry;
 import me.neo.synapser.net.handler.PacketRegistry;
 import me.neo.synapser.net.handler.handshake.HandshakePacket;
@@ -18,11 +19,15 @@ import me.neo.synapser.net.handler.status.StatusPingPacket;
 import me.neo.synapser.net.handler.status.StatusPongPacket;
 import me.neo.synapser.net.handler.status.StatusRequestPacket;
 import me.neo.synapser.net.handler.status.StatusResponsePacket;
+import me.neo.synapser.utils.ByteArray;
 import me.neo.synapser.utils.SLogger;
 import me.neo.synapser.utils.config.ServerConfig;
 
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameServer {
     /**
@@ -82,5 +87,24 @@ public class GameServer {
         PacketRegistry.register(new LoginSuccessPacket());
 
         Synapser.newKeyPair();
+
+        NBTCompound compound = new NBTCompound("");
+        compound.addTag(new NBTString("name", "Bananrama"));
+        NBTCompound compound1 = new NBTCompound("uwu");
+        compound1.addTag(new NBTShort("short", (short)513));
+        compound1.addTag(new NBTInt("integer", 23958235));
+        compound1.addTag(new NBTByte("byte", (byte)80));
+        compound.addTag(compound1);
+
+        File test = new File("bigtest.nbt");
+        NBTWriter writer = new NBTWriter(test);
+        //writer.write(compound);
+
+        try {
+            NBTReader reader = new NBTReader(new FileInputStream(test));
+            reader.read();
+        } catch (NBTReader.NBTReadException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
